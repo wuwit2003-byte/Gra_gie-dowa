@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studencka Gra Giełdowa</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #3b82f6;
+            --bg-color: #f8fafc;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            color: #94a3b8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        #messageBox {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+            font-style: italic;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Studencka Gra Giełdowa</h1>
+        <p>Wybierz spółkę, wygeneruj najwyższą stopę zwrotu i poprowadź swoje koło do zwycięstwa.</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Prześlij swój typ</h2>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 2rem;">
+                Zgłoszenia przyjmowane są wyłącznie w trakcie 5 ostatnich dni kalendarzowych miesiąca poprzedzającego. Pamiętaj, że na dany miesiąc możesz oddać tylko jeden typ.
+            </p>
+
+            <form id="stockForm">
+                <div class="form-group">
+                    <label for="email">Adres E-mail (Uczelniany)</label>
+                    <input type="email" id="email" name="email" required placeholder="np. j.kowalski@sgh.waw.pl">
+                </div>
+
+                <div class="form-group">
+                    <label for="imieNazwisko">Imię i Nazwisko</label>
+                    <input type="text" id="imieNazwisko" name="imieNazwisko" required placeholder="np. Jan Kowalski">
+                </div>
+
+                <div class="form-group">
+                    <label for="kolo">Koło Naukowe</label>
+                    <select id="kolo" name="kolo" required>
+                        <option value="SKN FM">SKN FM</option>
+                        <option value="SKN Klub Inwestora">SKN Klub Inwestora</option>
+                        <option value="SKN Finansów Korporacyjnych">SKN Finansów Korporacyjnych</option>
+                        <option value="Inne">Inne Koło Naukowe</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="miesiac">Miesiąc Gry (którego dotyczy typ)</label>
+                    <select id="miesiac" name="miesiac" required>
+                        <option value="Listopad">Listopad</option>
+                        <option value="Grudzień">Grudzień</option>
+                        <option value="Styczeń">Styczeń</option>
+                        <option value="Luty">Luty</option>
+                        <option value="Marzec">Marzec</option>
+                        <option value="Kwiecień">Kwiecień</option>
+                        <option value="Maj">Maj</option>
+                        <option value="Czerwiec">Czerwiec</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ticker">Ticker Spółki (z GPW)</label>
+                    <select id="ticker" name="ticker" required>
+                        <option value="" disabled selected>Wybierz spółkę z listy...</option>
+                        <!-- Poniżej przykładowe spółki. Docelowo należy wkleić tu listę WIG20/mWIG40/sWIG80 -->
+                        <option value="WSE:PKO">PKO BP (WSE:PKO)</option>
+                        <option value="WSE:PEO">Bank Pekao (WSE:PEO)</option>
+                        <option value="WSE:PZU">PZU (WSE:PZU)</option>
+                        <option value="WSE:CDR">CD Projekt (WSE:CDR)</option>
+                        <option value="WSE:DNP">Dino Polska (WSE:DNP)</option>
+                        <option value="WSE:LPP">LPP (WSE:LPP)</option>
+                        <option value="WSE:KGH">KGHM (WSE:KGH)</option>
+                        <option value="WSE:PKN">Orlen (WSE:PKN)</option>
+                        <option value="WSE:ALE">Allegro (WSE:ALE)</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="submitBtn">Zatwierdź typ na ten miesiąc</button>
+            </form>
+
+            <div class="loader" id="loader">Wysyłanie danych, proszę czekać...</div>
+            <div id="messageBox"></div>
+        </div>
+    </div>
+
+    <script>
+        // TUTAJ WKLEJ ADRES URL SWOJEGO SKRYPTU (Z KROKU 2)
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzevUrBNLncGp8rSbqZBz_cXGXpCUpo8uoq-OqpgLr5jlHJGbyIu3EVaPxEk3-ASegF/exec "; 
+
+        document.getElementById('stockForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Zatrzymuje przeładowanie strony
+
+            const btn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const msgBox = document.getElementById('messageBox');
+            
+            // Pobranie danych z formularza
+            const formData = {
+                email: document.getElementById('email').value,
+                imieNazwisko: document.getElementById('imieNazwisko').value,
+                kolo: document.getElementById('kolo').value,
+                miesiac: document.getElementById('miesiac').value,
+                ticker: document.getElementById('ticker').value
+            };
+
+            // Zablokowanie przycisku na czas wysyłania
+            btn.disabled = true;
+            loader.style.display = 'block';
+            msgBox.style.display = 'none';
+
+            // Wysłanie danych do Google Apps Script
+            fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Ważne dla darmowych skryptów Google
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                // Przy no-cors nie otrzymamy dokładnej treści odpowiedzi, ale wiemy że zapytanie przeszło.
+                // Logikę weryfikacji okna czasowego można też powtórzyć w JavaScript, żeby użytkownik dostał ładny błąd na stronie.
+                
+                loader.style.display = 'none';
+                msgBox.className = 'success';
+                msgBox.innerText = 'Zapytanie zostało wysłane pomyślnie. Jeśli zgłoszenie spełnia regulamin, pojawi się w bazie w ciągu kilku minut.';
+                msgBox.style.display = 'block';
+                document.getElementById('stockForm').reset();
+                setTimeout(() => { btn.disabled = false; }, 3000);
+            })
+            .catch((error) => {
+                loader.style.display = 'none';
+                msgBox.className = 'error';
+                msgBox.innerText = 'Wystąpił błąd podczas łączenia z bazą danych.';
+                msgBox.style.display = 'block';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
