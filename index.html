@@ -234,30 +234,29 @@
             loader.style.display = 'block';
             msgBox.style.display = 'none';
 
-            // Wysłanie danych do Google Apps Script
+            // Wysłanie danych do Google Apps Script (wersja bez blokady CORS)
             fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Ważne dla darmowych skryptów Google
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify(formData)
             })
-            .then(() => {
-                // Przy no-cors nie otrzymamy dokładnej treści odpowiedzi, ale wiemy że zapytanie przeszło.
-                // Logikę weryfikacji okna czasowego można też powtórzyć w JavaScript, żeby użytkownik dostał ładny błąd na stronie.
-                
+            .then(response => response.json()) // Teraz odczytujemy prawdziwą odpowiedź z serwera
+            .then(data => {
                 loader.style.display = 'none';
-                msgBox.className = 'success';
-                msgBox.innerText = 'Zapytanie zostało wysłane pomyślnie. Jeśli zgłoszenie spełnia regulamin, pojawi się w bazie w ciągu kilku minut.';
+                if(data.status === "error") {
+                    msgBox.className = 'error';
+                    msgBox.innerText = data.message;
+                } else {
+                    msgBox.className = 'success';
+                    msgBox.innerText = data.message;
+                    document.getElementById('stockForm').reset();
+                }
                 msgBox.style.display = 'block';
-                document.getElementById('stockForm').reset();
                 setTimeout(() => { btn.disabled = false; }, 3000);
             })
             .catch((error) => {
                 loader.style.display = 'none';
                 msgBox.className = 'error';
-                msgBox.innerText = 'Wystąpił błąd podczas łączenia z bazą danych.';
+                msgBox.innerText = 'Wystąpił błąd łączenia z arkuszem. Upewnij się, że link w GAS_WEB_APP_URL jest poprawny.';
                 msgBox.style.display = 'block';
                 btn.disabled = false;
             });
